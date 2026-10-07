@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">LibraryApp</string>
+    <string name="tab_books">Книги</string>
+    <string name="tab_favorites">Избранное</string>
+    <string name="tab_profile">Профиль</string>
+    <string name="books_empty">Пока нет ни одной книги</string>
+    <string name="books_end_of_list">Конец списка</string>
+    <string name="cd_book_cover">Обложка книги</string>
+    <string name="details_title">Детали книги</string>
+    <string name="details_first_published">Первое издание</string>
+    <string name="details_publishers">Издательства</string>
+    <string name="details_isbn">ISBN</string>
+    <string name="details_description">Описание</string>
+    <string name="details_subjects">Жанры</string>
+    <string name="details_not_found">Книга не найдена</string>
+    <string name="cd_back">Назад</string>
 </resources>
