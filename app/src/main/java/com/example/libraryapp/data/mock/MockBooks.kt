@@ -1,6 +1,6 @@
 package com.example.libraryapp.data.mock
 
-import com.example.libraryapp.data.model.Book
+import com.example.libraryapp.domain.model.Book
 
 object MockBooks{
     val books: List<Book> =listOf(

@@ -1,4 +1,4 @@
-package com.example.libraryapp.data.model
+package com.example.libraryapp.domain.model
 
 data class Book(
     val id: String,
