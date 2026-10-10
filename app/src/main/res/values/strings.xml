@@ -3,7 +3,7 @@
     <string name="tab_books">Книги</string>
     <string name="tab_favorites">Избранное</string>
     <string name="tab_profile">Профиль</string>
-    <string name="books_empty">Пока нет ни одной книги</string>
+    <string name="books_empty">Ничего не найдено</string>
     <string name="books_end_of_list">Конец списка</string>
     <string name="cd_book_cover">Обложка книги</string>
     <string name="details_title">Детали книги</string>
@@ -14,4 +14,10 @@
     <string name="details_subjects">Жанры</string>
     <string name="details_not_found">Книга не найдена</string>
     <string name="cd_back">Назад</string>
+    <string name="retry">Повторить</string>
+    <string name="error_no_connection">Нет подключения к интернету</string>
+    <string name="error_server">Сервер не отвечает, попробуйте позже</string>
+    <string name="error_unknown">Что-то пошло не так</string>
+    <string name="search_hint">Название или автор</string>
+    <string name="cd_clear">Очистить поиск</string>
 </resources>

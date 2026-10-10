@@ -87,9 +87,11 @@ fun AppNavigation() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Books.route) {
-                BooksScreen(onBookClick = { bookId ->
-                    navController.navigate(Screen.BookDetails.createRoute(bookId))
-                }
+                BooksScreen(
+                    onBookClick = {
+                        bookId ->
+                        navController.navigate(Screen.BookDetails.createRoute(bookId))
+                    }
                 )
             }
             composable(Screen.Favorites.route) {
