@@ -3,17 +3,28 @@ package com.example.libraryapp.ui.books
 import com.example.libraryapp.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,23 +35,55 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.libraryapp.ui.common.ErrorContent
+import com.example.libraryapp.ui.common.messageRes
 
 @Composable
 fun BooksScreen(
     onBookClick: (String) -> Unit,
-    viewModel: BookListViewModel = viewModel()
+    viewModel: BookListViewModel = viewModel(factory = BookListViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsState()
+    val error = state.error
 
-    when {
-        state.isLoading -> FullScreenLoading()
-        state.items.isEmpty() -> EmptyState()
-        else -> BookList(
-            state = state,
-            onBookClick = onBookClick,
-            onLoadMore = { viewModel.loadNextPage() }
+    Column(Modifier.fillMaxSize()) {
+        OutlinedTextField(
+            value = state.query,
+            onValueChange = viewModel::onQueryChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            singleLine = true,
+            placeholder = { Text(stringResource(R.string.search_hint)) },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            trailingIcon = {
+                if (state.query.isNotEmpty()) {
+                    IconButton(onClick = { viewModel.onQueryChange("") }) {
+                        Icon(
+                            Icons.Default.Clear,
+                            contentDescription = stringResource(R.string.cd_clear)
+                        )
+                    }
+                }
+            }
         )
+
+        Box(Modifier.weight(1f)) {
+            when {
+                state.isLoading -> FullScreenLoading()
+                error != null && state.items.isEmpty() ->
+                    ErrorContent(stringResource(error.messageRes()), onRetry = viewModel::retry)
+                state.items.isEmpty() -> EmptyState()
+                else -> BookList(
+                    state = state,
+                    onBookClick = onBookClick,
+                    onLoadMore = { viewModel.loadNextPage() },
+                    onRetry = viewModel::retry
+                )
+            }
+        }
     }
 }
 
@@ -55,7 +98,8 @@ private fun FullScreenLoading() {
 private fun BookList(
     state: BookListUiState,
     onBookClick: (String) -> Unit,
-    onLoadMore: () -> Unit
+    onLoadMore: () -> Unit,
+    onRetry: () -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -96,6 +140,19 @@ private fun BookList(
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(modifier = Modifier.size(28.dp))
+                }
+            }
+        }
+
+        state.error?.let { error ->
+            item(key = "load_more_error") {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(stringResource(error.messageRes()), color = MaterialTheme.colorScheme.error)
+                    TextButton(onClick = onRetry) { Text(stringResource(R.string.retry)) }
                 }
             }
         }

@@ -35,6 +35,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,14 +43,17 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.libraryapp.data.model.Book
+import coil.compose.AsyncImage
+import com.example.libraryapp.domain.model.Book
 import com.example.libraryapp.R
+import com.example.libraryapp.ui.common.ErrorContent
+import com.example.libraryapp.ui.common.messageRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookDetailsScreen(
     onBackClick: () -> Unit,
-    viewModel: BookDetailsViewModel = viewModel()
+    viewModel: BookDetailsViewModel = viewModel(factory = BookDetailsViewModel.Factory)
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -91,6 +95,8 @@ fun BookDetailsScreen(
                 BookDetailsUiState.Loading -> LoadingState()
                 BookDetailsUiState.NotFound -> NotFoundState()
                 is BookDetailsUiState.Success -> BookDetailsContent(s.book)
+                is BookDetailsUiState.Error ->
+                    ErrorContent(stringResource(s.error.messageRes()), onRetry = viewModel::loadBook)
             }
         }
     }
@@ -202,6 +208,14 @@ private fun HeaderSection(book: Book) {
                     tint = MaterialTheme.colorScheme.onSecondaryContainer,
                     modifier = Modifier.size(56.dp)
                 )
+                if (book.coverId != null) {
+                    AsyncImage(
+                        model = "https://covers.openlibrary.org/b/id/${book.coverId}-M.jpg",
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
         }
 

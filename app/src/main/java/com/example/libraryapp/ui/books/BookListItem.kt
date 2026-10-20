@@ -23,10 +23,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.libraryapp.data.model.Book
+import coil.compose.AsyncImage
+import com.example.libraryapp.domain.model.Book
 import com.example.libraryapp.R
 
 @Composable
@@ -48,7 +50,7 @@ fun BookListItem(
             modifier = modifier.fillMaxWidth().padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CoverPlaceholder()
+            CoverPlaceholder(book.coverId)
             Spacer(modifier = modifier.width(12.dp))
 
             Column(
@@ -80,7 +82,7 @@ fun BookListItem(
 }
 
 @Composable
-fun CoverPlaceholder() {
+fun CoverPlaceholder(coverId: Int?) {
     Card(
         modifier = Modifier.size(width = 56.dp, height = 80.dp).fillMaxSize(),
         shape = RoundedCornerShape(6.dp),
@@ -98,6 +100,14 @@ fun CoverPlaceholder() {
                 tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.size(24.dp)
             )
+            if (coverId != null) {
+                AsyncImage(
+                    model = "https://covers.openlibrary.org/b/id/$coverId-M.jpg",
+                    contentDescription = stringResource(R.string.cd_book_cover),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 }
