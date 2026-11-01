@@ -10,6 +10,7 @@ interface OpenLibraryApi {
     @GET("search.json")
     suspend fun search(
         @Query("q") query: String,
+        @Query("sort") sort: String?,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
         @Query("fields") fields: String =

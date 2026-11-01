@@ -17,6 +17,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -44,7 +46,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.libraryapp.domain.model.Book
 import com.example.libraryapp.R
 import com.example.libraryapp.ui.common.ErrorContent
 import com.example.libraryapp.ui.common.messageRes
@@ -56,6 +57,7 @@ fun BookDetailsScreen(
     viewModel: BookDetailsViewModel = viewModel(factory = BookDetailsViewModel.Factory)
 ) {
     val state by viewModel.uiState.collectAsState()
+    val isFavorite by viewModel.isFavorite.collectAsState()
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -82,6 +84,19 @@ fun BookDetailsScreen(
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
+                },
+                actions = {
+                    if (state is BookDetailsUiState.Success) {
+                        IconButton(onClick = viewModel::onToggleFavorite) {
+                            Icon(
+                                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                                contentDescription = stringResource(
+                                    if (isFavorite) R.string.cd_remove_favorite else R.string.cd_add_favorite
+                                ),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 }
             )
         }
@@ -104,7 +119,7 @@ fun BookDetailsScreen(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun BookDetailsContent(book: Book) {
+private fun BookDetailsContent(book: BookDetailsUi) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -118,15 +133,15 @@ private fun BookDetailsContent(book: Book) {
 
         MetaRow(
             label = stringResource(R.string.details_first_published),
-            value = book.firstPublishYear?.toString() ?: "—"
+            value = book.firstPublished
         )
         MetaRow(
             label = stringResource(R.string.details_publishers),
-            value = book.publishers.joinToString(", ").ifBlank { "—" }
+            value = book.publishers
         )
         MetaRow(
             label = stringResource(R.string.details_isbn),
-            value = book.isbn ?: "—"
+            value = book.isbn
         )
 
         HorizontalDivider()
@@ -177,7 +192,7 @@ fun SubjectTag(text: String) {
 }
 
 @Composable
-private fun HeaderSection(book: Book) {
+private fun HeaderSection(book: BookDetailsUi) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
@@ -234,7 +249,7 @@ private fun HeaderSection(book: Book) {
         )
 
         Text(
-            text = book.authors.joinToString(", "),
+            text = book.authors,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
             maxLines = 2,

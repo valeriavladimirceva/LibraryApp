@@ -1,5 +1,6 @@
 package com.example.libraryapp.ui.books
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,12 +29,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.libraryapp.domain.model.Book
 import com.example.libraryapp.R
 
 @Composable
 fun BookListItem(
-    book: Book,
+    book: BookItemUi,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -65,14 +65,14 @@ fun BookListItem(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = book.authors.joinToString(", "),
+                    text = book.authors,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = book.firstPublishYear?.toString() ?: "—",
+                    text = book.year,
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -105,7 +105,7 @@ fun CoverPlaceholder(coverId: Int?) {
                     model = "https://covers.openlibrary.org/b/id/$coverId-M.jpg",
                     contentDescription = stringResource(R.string.cd_book_cover),
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
         }

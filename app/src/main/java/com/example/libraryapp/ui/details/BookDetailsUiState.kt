@@ -5,7 +5,8 @@ import com.example.libraryapp.domain.model.DomainError
 
 sealed interface BookDetailsUiState {
     data object Loading : BookDetailsUiState
-    data class Success(val book: Book) : BookDetailsUiState
+    data class Success(val book: BookDetailsUi) : BookDetailsUiState
     data object NotFound : BookDetailsUiState
     data class Error(val error: DomainError) : BookDetailsUiState
+
 }
