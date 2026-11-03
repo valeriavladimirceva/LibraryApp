@@ -29,6 +29,7 @@ import com.example.libraryapp.ui.books.BooksScreen
 import com.example.libraryapp.ui.details.BookDetailsScreen
 import com.example.libraryapp.ui.favorites.FavoritesScreen
 import com.example.libraryapp.ui.profile.ProfileScreen
+import com.example.libraryapp.ui.settings.SettingsScreen
 
 private data class BottomTab(
     val route: String,
@@ -42,6 +43,8 @@ private val bottomTabs = listOf(
     BottomTab(route = Screen.Profile.route, titleRes = R.string.tab_profile, icon = Icons.Filled.Person)
 )
 
+private val bottomBarRoutes = bottomTabs.map { it.route }.toSet()
+
 @Composable
 fun AppNavigation() {
 
@@ -49,9 +52,13 @@ fun AppNavigation() {
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
+    val showBottomBar = currentDestination
+        ?.hierarchy
+        ?.any { it.route in bottomBarRoutes } == true
 
     Scaffold(
         bottomBar = {
+            if(showBottomBar)
             NavigationBar {
                 bottomTabs.forEach { tab ->
                     val selected = currentDestination
@@ -91,14 +98,22 @@ fun AppNavigation() {
                     onBookClick = {
                         bookId ->
                         navController.navigate(Screen.BookDetails.createRoute(bookId))
-                    }
+                    },
+                    onOpenSettings = { navController.navigate(Screen.Settings.route) }
                 )
             }
             composable(Screen.Favorites.route) {
-                FavoritesScreen()
+                FavoritesScreen(
+                    onBookClick = {bookId ->
+                        navController.navigate(Screen.BookDetails.createRoute(bookId))
+                    }
+                )
             }
             composable(Screen.Profile.route) {
                 ProfileScreen()
+            }
+            composable(Screen.Settings.route) {
+                SettingsScreen(onBack = { navController.popBackStack() })
             }
 
             composable(

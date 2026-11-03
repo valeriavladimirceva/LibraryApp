@@ -1,11 +1,14 @@
 package com.example.libraryapp.data.repository
 
 import com.example.libraryapp.data.remote.OpenLibraryApi
+import com.example.libraryapp.data.remote.buildSearchQuery
 import com.example.libraryapp.data.remote.descriptionText
+import com.example.libraryapp.data.remote.toApiValue
 import com.example.libraryapp.data.remote.toDomain
 import com.example.libraryapp.domain.model.Book
 import com.example.libraryapp.domain.model.BooksPage
 import com.example.libraryapp.domain.model.DomainError
+import com.example.libraryapp.domain.model.SearchFilters
 import com.example.libraryapp.domain.repository.BookRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,8 +21,15 @@ class BookRepositoryImpl(private val api: OpenLibraryApi): BookRepository {
 
     private val cache = ConcurrentHashMap<String, Book>()
 
-    override suspend fun searchBooks(query: String, page: Int, limit: Int) = safeCall {
-        val response = api.search(query, page, limit)
+    override suspend fun searchBooks(
+        query: String, page: Int, limit: Int, filters: SearchFilters
+    ) = safeCall {
+        val response = api.search(
+            query = buildSearchQuery(query, filters),
+            sort = filters.sort.toApiValue(),
+            page = page,
+            limit = limit
+        )
         val books = response.docs.map { it.toDomain() }
         books.forEach { cache[it.id] = it }
         BooksPage(books, response.numFound)
