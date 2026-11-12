@@ -6,6 +6,8 @@ sealed class Screen(val route: String) {
     data object Profile: Screen("profile")
     data object Settings: Screen("settings")
 
+    data object ProfileEdit: Screen("profile_edit")
+
     data object BookDetails: Screen("book_detail/{bookId}") {
         const val ARG_BOOK_ID = "bookId"
         fun createRoute(bookId: String): String = "book_detail/${bookId}"

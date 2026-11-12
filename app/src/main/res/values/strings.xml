@@ -39,4 +39,19 @@
     <string name="favorites_empty">В избранном пока пусто</string>
     <string name="cd_add_favorite">Добавить в избранное</string>
     <string name="cd_remove_favorite">Убрать из избранного</string>
+    <string name="profile_title">Профиль</string>
+    <string name="profile_name_empty">Имя не указано</string>
+    <string name="profile_resume">Резюме</string>
+    <string name="profile_no_pdf_viewer">Нет приложения для просмотра PDF</string>
+    <string name="cd_avatar">Аватарка</string>
+    <string name="cd_edit_profile">Редактировать профиль</string>
+    <string name="edit_profile_title">Редактирование профиля</string>
+    <string name="edit_profile_photo_hint">Нажмите на фото, чтобы изменить</string>
+    <string name="field_full_name">ФИО</string>
+    <string name="field_resume_url">Ссылка на резюме (PDF)</string>
+    <string name="photo_chooser_title">Выбрать фото</string>
+    <string name="photo_gallery">Галерея</string>
+    <string name="photo_camera">Камера</string>
+    <string name="profile_done">Готово</string>
+    <string name="profile_cancel">Отмена</string>
 </resources>

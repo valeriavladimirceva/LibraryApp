@@ -28,6 +28,7 @@ import androidx.navigation.navArgument
 import com.example.libraryapp.ui.books.BooksScreen
 import com.example.libraryapp.ui.details.BookDetailsScreen
 import com.example.libraryapp.ui.favorites.FavoritesScreen
+import com.example.libraryapp.ui.profile.EditProfileScreen
 import com.example.libraryapp.ui.profile.ProfileScreen
 import com.example.libraryapp.ui.settings.SettingsScreen
 
@@ -110,8 +111,15 @@ fun AppNavigation() {
                 )
             }
             composable(Screen.Profile.route) {
-                ProfileScreen()
+                ProfileScreen(
+                    onEditClick = { navController.navigate(Screen.ProfileEdit.route) }
+                )
             }
+
+            composable(Screen.ProfileEdit.route) {
+                EditProfileScreen(onBack = { navController.popBackStack() })
+            }
+
             composable(Screen.Settings.route) {
                 SettingsScreen(onBack = { navController.popBackStack() })
             }
