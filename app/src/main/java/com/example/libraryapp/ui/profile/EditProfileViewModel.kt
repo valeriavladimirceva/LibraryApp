@@ -6,11 +6,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.libraryapp.di.LibraryApplication
+import com.example.libraryapp.domain.model.LessonTime
+import com.example.libraryapp.domain.model.LessonTimeValidation
 import com.example.libraryapp.domain.model.Profile
+import com.example.libraryapp.domain.repository.ScheduleResult
 import com.example.libraryapp.domain.usecase.CreateCameraTargetUseCase
 import com.example.libraryapp.domain.usecase.ImportPhotoUseCase
 import com.example.libraryapp.domain.usecase.ObserveProfileUseCase
 import com.example.libraryapp.domain.usecase.SaveProfileUseCase
+import com.example.libraryapp.domain.usecase.ScheduleReminderUseCase
+import com.example.libraryapp.domain.usecase.ValidateLessonTimeUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,14 +27,24 @@ data class EditProfileUiState(
     val fullName: String = "",
     val photoUri: String? = null,
     val resumeUrl: String = "",
-    val isLoaded: Boolean = false
-)
+    val lessonTimeText: String = "",
+    val lessonTimeValidation: LessonTimeValidation = LessonTimeValidation.Empty,
+    val lessonTimeTouched: Boolean = false,
+    val isLoaded: Boolean = false,
+    ) {
+    val canSave: Boolean
+        get() = isLoaded && lessonTimeValidation is LessonTimeValidation.Valid
+}
+
+enum class DoneResult { Scheduled, NeedExactAlarm, NotificationsDenied }
 
 class EditProfileViewModel(
     private val observeProfile: ObserveProfileUseCase,
     private val saveProfile: SaveProfileUseCase,
     private val importPhoto: ImportPhotoUseCase,
-    private val createCameraTarget: CreateCameraTargetUseCase
+    private val createCameraTarget: CreateCameraTargetUseCase,
+    private val validateLessonTime: ValidateLessonTimeUseCase,
+    private val scheduleReminder: ScheduleReminderUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EditProfileUiState())
@@ -40,17 +55,31 @@ class EditProfileViewModel(
     init {
         viewModelScope.launch {
             val saved = observeProfile().first()
+            val timeText = saved.lessonTime?.toString().orEmpty()
             _uiState.value = EditProfileUiState(
                 fullName = saved.fullName,
                 photoUri = saved.photoUri,
                 resumeUrl = saved.resumeUrl,
-                isLoaded = true
+                lessonTimeText = timeText,
+                lessonTimeValidation = validateLessonTime(timeText),
+                isLoaded = true,
             )
         }
     }
 
     fun onFullNameChange(value: String) = _uiState.update { it.copy(fullName = value) }
     fun onResumeUrlChange(value: String) = _uiState.update { it.copy(resumeUrl = value) }
+
+    fun onLessonTimeChange(value: String) = _uiState.update {
+        it.copy(
+            lessonTimeText = value,
+            lessonTimeValidation = validateLessonTime(value),
+            lessonTimeTouched = true
+        )
+    }
+
+    fun onLessonTimePicked(hour: Int, minute: Int) =
+        onLessonTimeChange(LessonTime(hour, minute).toString())
 
     fun onPhotoPicked(sourceUri: String) {
         viewModelScope.launch {
@@ -73,17 +102,27 @@ class EditProfileViewModel(
         }
     }
 
-    fun onDone(onSaved: () -> Unit) {
+    fun onDone(notificationsAllowed: Boolean, onResult: (DoneResult) -> Unit) {
         val s = _uiState.value
+        val valid = s.lessonTimeValidation as? LessonTimeValidation.Valid ?: return
         viewModelScope.launch {
             saveProfile(
                 Profile(
                     fullName = s.fullName.trim(),
                     photoUri = s.photoUri,
-                    resumeUrl = s.resumeUrl.trim()
+                    resumeUrl = s.resumeUrl.trim(),
+                    lessonTime = valid.time
                 )
             )
-            onSaved()
+            val result = if (!notificationsAllowed) {
+                DoneResult.NotificationsDenied
+            } else {
+                when (scheduleReminder(valid.time, s.fullName)) {
+                    ScheduleResult.Scheduled -> DoneResult.Scheduled
+                    ScheduleResult.ExactAlarmNotAllowed -> DoneResult.NeedExactAlarm
+                }
+            }
+            onResult(result)
         }
     }
 
@@ -95,7 +134,9 @@ class EditProfileViewModel(
                     app.container.observeProfile,
                     app.container.saveProfile,
                     app.container.importPhoto,
-                    app.container.createCameraTarget
+                    app.container.createCameraTarget,
+                    app.container.validateLessonTime,
+                    app.container.scheduleReminder
                 )
             }
         }
