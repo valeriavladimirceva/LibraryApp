@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.libraryapp.domain.model.LessonTime
 import com.example.libraryapp.domain.model.Profile
 import com.example.libraryapp.domain.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +23,7 @@ class DataStoreProfileRepository(context: Context) : ProfileRepository {
         val FULL_NAME = stringPreferencesKey("full_name")
         val PHOTO_URI = stringPreferencesKey("photo_uri")
         val RESUME_URL = stringPreferencesKey("resume_url")
+        val LESSON_TIME = stringPreferencesKey("lesson_time")
     }
 
     override val profile: Flow<Profile> = dataStore.data
@@ -32,7 +34,8 @@ class DataStoreProfileRepository(context: Context) : ProfileRepository {
             Profile(
                 fullName = prefs[Keys.FULL_NAME].orEmpty(),
                 photoUri = prefs[Keys.PHOTO_URI],
-                resumeUrl = prefs[Keys.RESUME_URL].orEmpty()
+                resumeUrl = prefs[Keys.RESUME_URL].orEmpty(),
+                lessonTime = prefs[Keys.LESSON_TIME]?.let { LessonTime.parse(it) }
             )
         }
 
@@ -42,6 +45,8 @@ class DataStoreProfileRepository(context: Context) : ProfileRepository {
             prefs[Keys.RESUME_URL] = profile.resumeUrl
             val photo = profile.photoUri
             if (photo != null) prefs[Keys.PHOTO_URI] = photo else prefs.remove(Keys.PHOTO_URI)
+            val time = profile.lessonTime
+            if (time != null) prefs[Keys.LESSON_TIME] = time.toString() else prefs.remove(Keys.LESSON_TIME)
         }
     }
 }

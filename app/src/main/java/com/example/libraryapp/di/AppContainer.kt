@@ -5,6 +5,7 @@ import com.example.libraryapp.data.local.DataStoreFiltersRepository
 import com.example.libraryapp.data.local.DataStoreProfileRepository
 import com.example.libraryapp.data.local.FilePhotoStorage
 import com.example.libraryapp.data.local.db.AppDatabase
+import com.example.libraryapp.data.notification.AlarmReminderScheduler
 import com.example.libraryapp.data.remote.OpenLibraryApi
 import com.example.libraryapp.data.repository.BookRepositoryImpl
 import com.example.libraryapp.data.repository.FavoritesRepositoryImpl
@@ -15,6 +16,7 @@ import com.example.libraryapp.domain.repository.FavoritesRepository
 import com.example.libraryapp.domain.repository.FiltersRepository
 import com.example.libraryapp.domain.repository.PhotoStorage
 import com.example.libraryapp.domain.repository.ProfileRepository
+import com.example.libraryapp.domain.repository.ReminderScheduler
 import com.example.libraryapp.domain.repository.ResumeRepository
 import com.example.libraryapp.domain.usecase.CreateCameraTargetUseCase
 import com.example.libraryapp.domain.usecase.DownloadResumeUseCase
@@ -22,7 +24,9 @@ import com.example.libraryapp.domain.usecase.GetBookDetailsUseCase
 import com.example.libraryapp.domain.usecase.ImportPhotoUseCase
 import com.example.libraryapp.domain.usecase.ObserveProfileUseCase
 import com.example.libraryapp.domain.usecase.SaveProfileUseCase
+import com.example.libraryapp.domain.usecase.ScheduleReminderUseCase
 import com.example.libraryapp.domain.usecase.SearchBooksUseCase
+import com.example.libraryapp.domain.usecase.ValidateLessonTimeUseCase
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -70,5 +74,10 @@ class AppContainer(context: Context) {
     val createCameraTarget = CreateCameraTargetUseCase(photoStorage)
     val importPhoto = ImportPhotoUseCase(photoStorage)
     val downloadResume = DownloadResumeUseCase(resumeRepository)
+
+    private val reminderScheduler: ReminderScheduler = AlarmReminderScheduler(context)
+
+    val validateLessonTime = ValidateLessonTimeUseCase()
+    val scheduleReminder = ScheduleReminderUseCase(reminderScheduler)
 }
 

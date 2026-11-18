@@ -54,4 +54,22 @@
     <string name="photo_camera">Камера</string>
     <string name="profile_done">Готово</string>
     <string name="profile_cancel">Отмена</string>
+    <string name="reminder_channel_name">Напоминания о парах</string>
+    <string name="reminder_channel_description">Уведомления о начале любимой пары</string>
+    <string name="reminder_title">Время любимой пары</string>
+    <string name="reminder_text">%1$s, пара начинается!</string>
+    <string name="reminder_text_no_name">Пара начинается!</string>
+    <string name="field_lesson_time">Время любимой пары</string>
+    <string name="lesson_time_hint">Формат ЧЧ:мм, например 09:30</string>
+    <string name="lesson_time_error_empty">Введите время</string>
+    <string name="lesson_time_error_format">Неверный формат, нужно ЧЧ:мм</string>
+    <string name="cd_pick_time">Выбрать время на часах</string>
+    <string name="time_picker_title">Выберите время</string>
+    <string name="time_picker_ok">ОК</string>
+    <string name="exact_alarm_title">Нужно разрешение на точные напоминания</string>
+    <string name="exact_alarm_text">Профиль сохранён, но напоминание не поставлено. Разрешите приложению точные будильники в настройках, затем вернитесь и нажмите «Готово» ещё раз.</string>
+    <string name="notifications_denied_title">Уведомления отключены</string>
+    <string name="notifications_denied_text">Профиль сохранён, но напоминание не появится. Включите уведомления для приложения в настройках, затем нажмите «Готово» ещё раз.</string>
+    <string name="open_settings">Открыть настройки</string>
+    <string name="skip_reminder">Без напоминания</string>
 </resources>
