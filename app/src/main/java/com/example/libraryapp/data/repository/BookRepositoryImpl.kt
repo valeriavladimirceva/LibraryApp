@@ -7,7 +7,7 @@ import com.example.libraryapp.data.remote.toApiValue
 import com.example.libraryapp.data.remote.toDomain
 import com.example.libraryapp.domain.model.Book
 import com.example.libraryapp.domain.model.BooksPage
-import com.example.libraryapp.domain.model.DomainError
+import com.example.libraryapp.core.DomainError
 import com.example.libraryapp.domain.model.SearchFilters
 import com.example.libraryapp.domain.repository.BookRepository
 import kotlinx.coroutines.Dispatchers

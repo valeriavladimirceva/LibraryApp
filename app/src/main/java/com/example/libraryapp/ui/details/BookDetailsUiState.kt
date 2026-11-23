@@ -1,7 +1,6 @@
 package com.example.libraryapp.ui.details
 
-import com.example.libraryapp.domain.model.Book
-import com.example.libraryapp.domain.model.DomainError
+import com.example.libraryapp.core.DomainError
 
 sealed interface BookDetailsUiState {
     data object Loading : BookDetailsUiState

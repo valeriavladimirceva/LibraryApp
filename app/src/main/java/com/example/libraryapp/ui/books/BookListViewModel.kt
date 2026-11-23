@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.lifecycle.ViewModelProvider
+import com.example.libraryapp.core.DomainError
 import com.example.libraryapp.di.LibraryApplication
 import com.example.libraryapp.domain.cache.FiltersBadgeCache
-import com.example.libraryapp.domain.model.DomainError
 import com.example.libraryapp.domain.model.SearchFilters
 import com.example.libraryapp.domain.repository.FiltersRepository
 import com.example.libraryapp.domain.usecase.SearchBooksUseCase
