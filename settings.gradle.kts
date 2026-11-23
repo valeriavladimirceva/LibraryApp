@@ -24,4 +24,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "LibraryApp"
 include(":app")
- 
+include(":core")
+include(":uikit")
+include(":profile")

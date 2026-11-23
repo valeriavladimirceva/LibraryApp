@@ -48,7 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.libraryapp.R
 import com.example.libraryapp.ui.common.ErrorContent
-import com.example.libraryapp.ui.common.messageRes
+import com.example.libraryapp.core.messageRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

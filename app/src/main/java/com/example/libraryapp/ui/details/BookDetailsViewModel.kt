@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.lifecycle.ViewModelProvider
+import com.example.libraryapp.core.DomainError
 import com.example.libraryapp.di.LibraryApplication
 import com.example.libraryapp.domain.model.Book
-import com.example.libraryapp.domain.model.DomainError
 import com.example.libraryapp.domain.repository.FavoritesRepository
 import com.example.libraryapp.domain.usecase.GetBookDetailsUseCase
 import com.example.libraryapp.ui.navigation.Screen

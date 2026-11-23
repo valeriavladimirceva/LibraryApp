@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.libraryapp.R
-import com.example.libraryapp.domain.model.DomainError
+import com.example.libraryapp.core.DomainError
 
 @Composable
 fun ErrorContent(message: String, onRetry: () -> Unit, modifier: Modifier = Modifier) {

@@ -39,7 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.libraryapp.ui.common.ErrorContent
-import com.example.libraryapp.ui.common.messageRes
+import com.example.libraryapp.core.messageRes
 
 @Composable
 fun BooksScreen(

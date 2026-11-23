@@ -1,13 +1,12 @@
 package com.example.libraryapp.di
 
 import android.app.Application
-import com.example.libraryapp.data.notification.NotificationHelper
+import com.example.libraryapp.profile.di.ProfileContainer
+import com.example.libraryapp.profile.di.ProfileContainerProvider
 
-class LibraryApplication : Application() {
+class LibraryApplication : Application(), ProfileContainerProvider {
     val container by lazy { AppContainer(this) }
 
-    override fun onCreate() {
-        super.onCreate()
-        NotificationHelper.createChannel(this)
-    }
+    override val profileContainer: ProfileContainer
+        get() = container.profileContainer
 }

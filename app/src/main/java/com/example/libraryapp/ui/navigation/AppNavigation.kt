@@ -28,8 +28,8 @@ import androidx.navigation.navArgument
 import com.example.libraryapp.ui.books.BooksScreen
 import com.example.libraryapp.ui.details.BookDetailsScreen
 import com.example.libraryapp.ui.favorites.FavoritesScreen
-import com.example.libraryapp.ui.profile.EditProfileScreen
-import com.example.libraryapp.ui.profile.ProfileScreen
+import com.example.libraryapp.profile.ui.EditProfileScreen
+import com.example.libraryapp.profile.ui.ProfileScreen
 import com.example.libraryapp.ui.settings.SettingsScreen
 
 private data class BottomTab(

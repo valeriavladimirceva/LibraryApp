@@ -1,0 +1,29 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+android {
+    namespace = "com.example.libraryapp.core"
+    compileSdk {
+        version = release(37)
+    }
+
+    defaultConfig {
+        minSdk = 24
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+}
+
+dependencies {
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
+    implementation("androidx.annotation:annotation:1.9.1")
+}
